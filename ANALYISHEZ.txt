@@ -1,0 +1,23 @@
+import requests
+from bs4 import BeautifulSoup
+def get_denara_data():
+  """Gets the data from the Denara website."""
+  url = "https://denara.com/"
+  response = requests.get(url)
+  soup = BeautifulSoup(response.content, "html.parser")
+  data = {}
+  for row in soup.find_all("tr"):
+    cells = row.find_all("td")
+    if len(cells) == 2:
+      data[cells[0].text] = cells[1].text
+  return data
+def generate_personalized_code(data):
+  """Generates a personalized code for the user."""
+  code = ""
+  for key, value in data.items():
+    code += f"{key}: {value}\n"
+  return code
+if __name__ == "__main__":
+  data = get_denara_data()
+  code = generate_personalized_code(data)
+  print(code)
